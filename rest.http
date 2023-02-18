@@ -1,0 +1,12 @@
+// admin Registration
+POST http://localhost:8000/api/v1/admin
+Content-Type: application/json
+
+{
+    "fName": "Prem",
+    "lName": "Acharya",
+    "email": "a@a3.com",
+    "phone": "0987654",
+    "address": "sydney",
+    "password": "123456"
+}
