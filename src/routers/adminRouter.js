@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createAdmin,
+  findAdmin,
   findAdminAndUpdate,
 } from "../models/adminUser/AdminUserModel.js";
 const router = express.Router();
@@ -77,5 +78,35 @@ router.post("/verify-email", async (req, res, next) => {
 });
 
 //admin login
+
+router.post("/login", async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const admin = await findAdmin({ email });
+
+    if (admin?.status === "inactive") {
+      return res.json({
+        status: "error",
+        message:
+          "Your account is inactive. Please follow the link to activate your account",
+      });
+    }
+
+    if (admin?._id) {
+      const isPasswordMatch = comparePassword(password, admin.password);
+      if (isPasswordMatch) {
+        admin.password = undefined;
+        admin.__v = undefined;
+
+        return res.json({
+          status: "success",
+          message: "Login is successfull",
+        });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;
